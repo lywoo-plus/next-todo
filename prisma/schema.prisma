@@ -23,6 +23,7 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  tasks         Task[]
 
   @@unique([email])
   @@map("user")
@@ -58,8 +59,21 @@ model Account {
   password              String?
   createdAt             DateTime
   updatedAt             DateTime
-
+  
   @@map("account")
+}
+
+model Task {
+  id        String   @id
+  name      String
+  done      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("task")
 }
 
 model Verification {

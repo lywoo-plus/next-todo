@@ -1,5 +1,6 @@
 'use client';
 
+import { createTask } from '@/action/task';
 import {
   Card,
   CardContent,
@@ -16,21 +17,24 @@ import { Button } from './ui/button';
 import { Field, FieldError, FieldGroup } from './ui/field';
 import { Input } from './ui/input';
 
-const formSchema = z.object({
-  taskName: z.string().min(1, 'Task name is required'),
+export const taskFormSchema = z.object({
+  name: z.string().min(1, 'Name is required'),
 });
 
+export type TaskFormSchemaData = z.infer<typeof taskFormSchema>;
+
 export default function TodoForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<TaskFormSchemaData>({
+    resolver: zodResolver(taskFormSchema),
     defaultValues: {
-      taskName: '',
+      name: '',
     },
   });
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: TaskFormSchemaData) {
     try {
-      // TODO: implement add new task
+      await createTask(data);
+      form.reset();
       toast.success('Task added successfully');
     } catch (error) {
       toast.error((error as Error).message);
@@ -48,7 +52,7 @@ export default function TodoForm() {
         <form id="todo-form" onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <Controller
-              name="taskName"
+              name="name"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -77,7 +81,7 @@ export default function TodoForm() {
             Reset
           </Button>
           <Button
-            disabled={form.formState.isSubmitting}
+            disabled={form.formState.isSubmitting || !form.formState.isValid}
             type="submit"
             form="todo-form"
             className="cursor-pointer bg-blue-500 hover:bg-blue-400"

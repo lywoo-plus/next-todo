@@ -1,5 +1,6 @@
 import Nav from '@/components/nav-bar';
 import { Toaster } from '@/components/ui/sonner';
+import { CircleCheck, CircleX } from 'lucide-react';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
@@ -29,7 +30,12 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Nav />
         {children}
-        <Toaster />
+        <Toaster
+          icons={{
+            success: <CircleCheck className="text-green-500" />,
+            error: <CircleX className="text-red-500" />,
+          }}
+        />
       </body>
     </html>
   );
