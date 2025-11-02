@@ -1,6 +1,6 @@
 'use client';
 
-import { createTaskAction } from '@/action/task';
+import { createTaskAction, getTaskAction, updateTaskAction } from '@/action/task';
 import {
   Card,
   CardContent,
@@ -9,7 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { useQueryParams } from '@/hook/useQueryParams';
+import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRequest } from 'ahooks';
 import { redirect } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -17,6 +20,7 @@ import z from 'zod';
 import { Button } from './ui/button';
 import { Field, FieldError, FieldGroup } from './ui/field';
 import { Input } from './ui/input';
+import { Spinner } from './ui/spinner';
 
 export const taskFormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -24,7 +28,9 @@ export const taskFormSchema = z.object({
 
 export type TaskFormSchemaData = z.infer<typeof taskFormSchema>;
 
-export default function TaskForm() {
+export default function TaskForm(props: { id?: string }) {
+  const { deleteQueryParam } = useQueryParams();
+
   const form = useForm<TaskFormSchemaData>({
     resolver: zodResolver(taskFormSchema),
     defaultValues: {
@@ -34,9 +40,18 @@ export default function TaskForm() {
 
   async function onSubmit(data: TaskFormSchemaData) {
     try {
-      await createTaskAction(data);
+      const shouldCreateTask = !props.id;
+
+      if (shouldCreateTask) {
+        await createTaskAction(data);
+        toast.success('Task added successfully');
+      } else {
+        await updateTaskAction(props.id!, data);
+        toast.success('Task updated successfully');
+        deleteQueryParam('id');
+      }
+
       form.reset();
-      toast.success('Task added successfully');
     } catch (error) {
       if (error instanceof Error) {
         toast.error(error.message);
@@ -49,12 +64,33 @@ export default function TaskForm() {
     }
   }
 
+  const { loading: isGettingTask } = useRequest(
+    async () => {
+      if (props.id) {
+        const task = await getTaskAction(props.id);
+        form.setValue('name', task?.name ?? '', { shouldValidate: true });
+      }
+    },
+    {
+      refreshDeps: [props.id],
+    }
+  );
+
   return (
-    <Card>
+    <Card className="w-full relative">
       <CardHeader>
         <CardTitle className="text-2xl">Task</CardTitle>
         <CardDescription>New task can be added here</CardDescription>
       </CardHeader>
+
+      <div
+        className={cn(
+          'absolute top-0 place-content-center left-0 w-full h-full bg-black/5 backdrop-blur-xs z-10 flex items-center justify-center',
+          props.id && isGettingTask ? 'grid' : 'hidden'
+        )}
+      >
+        <Spinner className="size-16 text-green-600" />
+      </div>
 
       <CardContent>
         <form id="todo-form" onSubmit={form.handleSubmit(onSubmit)}>
@@ -94,7 +130,7 @@ export default function TaskForm() {
             form="todo-form"
             className="cursor-pointer bg-green-600 hover:bg-green-400"
           >
-            {form.formState.isSubmitting ? 'Loading' : 'Add'}
+            {form.formState.isSubmitting ? 'Loading' : props.id ? 'Update' : 'Add'}
           </Button>
         </Field>
       </CardFooter>

@@ -33,6 +33,22 @@ export async function createTaskAction(data: TaskFormSchemaData) {
   revalidatePath('/');
 }
 
+export async function updateTaskAction(id: string, data: TaskFormSchemaData) {
+  const session = await checkSession();
+
+  await prisma.task.update({
+    where: {
+      userId: session.user.id,
+      id,
+    },
+    data: {
+      name: data.name,
+    },
+  });
+
+  revalidatePath('/');
+}
+
 export async function listTasksAction(payload?: { name?: string; done?: boolean }) {
   const session = await checkSession();
 
@@ -44,6 +60,17 @@ export async function listTasksAction(payload?: { name?: string; done?: boolean 
     },
     orderBy: {
       updatedAt: 'desc',
+    },
+  });
+}
+
+export async function getTaskAction(id: string) {
+  const session = await checkSession();
+
+  return prisma.task.findFirst({
+    where: {
+      userId: session.user.id,
+      id,
     },
   });
 }

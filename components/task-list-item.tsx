@@ -6,10 +6,13 @@ import { Item, ItemActions, ItemContent, ItemTitle } from '@/components/ui/item'
 import { Task } from '@prisma/client';
 import { useRequest } from 'ahooks';
 import { CheckCircleIcon, PencilIcon, UndoIcon, XIcon } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Spinner } from './ui/spinner';
 
 export function TaskListItem(props: Pick<Task, 'id' | 'name' | 'done'>) {
+  const router = useRouter();
+
   const { loading: isCompletingTask, run: completeTask } = useRequest(
     (value: Pick<Task, 'id' | 'done'>) => completeTaskAction(value),
     {
@@ -52,7 +55,14 @@ export function TaskListItem(props: Pick<Task, 'id' | 'name' | 'done'>) {
                   <XIcon className="size-4" />
                 </Button>
 
-                <Button size="icon-sm" variant="ghost" className="bg-yellow-500 rounded-full">
+                <Button
+                  size="icon-sm"
+                  variant="ghost"
+                  className="bg-yellow-500 rounded-full"
+                  onClick={() => {
+                    router.push(`?id=${props.id}`, { scroll: false });
+                  }}
+                >
                   <PencilIcon className="size-4" />
                 </Button>
               </>

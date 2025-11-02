@@ -15,20 +15,22 @@ type Props = {
 
 export default function TaskListCard(props: Props) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="text-2xl">{props.title}</CardTitle>
-        <CardDescription>{props.description}</CardDescription>
-      </CardHeader>
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">{props.title}</CardTitle>
+          <CardDescription>{props.description}</CardDescription>
+        </CardHeader>
 
-      <CardContent className="space-y-4 h-full">
-        <Input placeholder="Search..." />
+        <CardContent className="space-y-4 h-full">
+          <Input placeholder="Search..." />
 
-        <Suspense fallback={<TaskLoading />}>
-          <TodoTasks {...props} />
-        </Suspense>
-      </CardContent>
-    </Card>
+          <Suspense fallback={<TaskLoading />}>
+            <TodoTasks {...props} />
+          </Suspense>
+        </CardContent>
+      </Card>
+    </>
   );
 }
 
