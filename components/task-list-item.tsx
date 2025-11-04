@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Item, ItemActions, ItemContent, ItemTitle } from '@/components/ui/item';
 import { Task } from '@prisma/client';
 import { useRequest } from 'ahooks';
-import { CheckCircleIcon, PencilIcon, UndoIcon, XIcon } from 'lucide-react';
+import { CheckCircleIcon, EyeIcon, PencilIcon, UndoIcon, XIcon } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Spinner } from './ui/spinner';
@@ -97,6 +98,12 @@ export function TaskListItem(props: Pick<Task, 'id' | 'name' | 'done'>) {
                 <CheckCircleIcon />
               </Button>
             )}
+
+            <Link href={`task/${props.id}`}>
+              <Button size="icon-sm" variant="ghost" className="bg-blue-500 rounded-full">
+                <EyeIcon className="size-4" />
+              </Button>
+            </Link>
           </ItemActions>
         )}
       </Item>

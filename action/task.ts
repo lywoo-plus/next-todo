@@ -5,6 +5,7 @@ import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 async function checkSession() {
   const session = await auth.api.getSession({
@@ -12,8 +13,7 @@ async function checkSession() {
   });
 
   if (!session?.session) {
-    const err = new Error('Unauthorized');
-    throw err;
+    redirect('/sign-in');
   }
 
   return session;

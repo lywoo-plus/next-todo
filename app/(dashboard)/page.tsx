@@ -1,5 +1,4 @@
 import { listTasksAction } from '@/action/task';
-import EditTaskFormDialog from '@/components/edit-task-form-dialog';
 import TaskForm from '@/components/task-form';
 import TaskListCard from '@/components/task-list-card';
 import { Suspense } from 'react';
@@ -28,10 +27,6 @@ export default function Home() {
           action={() => listTasksAction({ done: true })}
         />
       </div>
-
-      <Suspense>
-        <EditTaskFormDialog />
-      </Suspense>
     </>
   );
 }
