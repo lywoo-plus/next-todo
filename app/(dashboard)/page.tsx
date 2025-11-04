@@ -2,13 +2,16 @@ import { listTasksAction } from '@/action/task';
 import EditTaskFormDialog from '@/components/edit-task-form-dialog';
 import TaskForm from '@/components/task-form';
 import TaskListCard from '@/components/task-list-card';
+import { Suspense } from 'react';
 
 export default function Home() {
   return (
     <>
       <div className="mx-auto grid grid-cols-1 p-8 md:grid-cols-3 2xl:container gap-6">
         <div>
-          <TaskForm />
+          <Suspense>
+            <TaskForm />
+          </Suspense>
         </div>
 
         <TaskListCard
@@ -26,7 +29,9 @@ export default function Home() {
         />
       </div>
 
-      <EditTaskFormDialog />
+      <Suspense>
+        <EditTaskFormDialog />
+      </Suspense>
     </>
   );
 }
