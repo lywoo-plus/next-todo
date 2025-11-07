@@ -9,11 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { useQueryParams } from '@/hook/useQueryParams';
 import { cn } from '@/lib/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRequest } from 'ahooks';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import z from 'zod';
@@ -29,7 +28,7 @@ export const taskFormSchema = z.object({
 export type TaskFormSchemaData = z.infer<typeof taskFormSchema>;
 
 export default function TaskForm(props: { id?: string }) {
-  const { deleteQueryParam } = useQueryParams();
+  const router = useRouter();
 
   const form = useForm<TaskFormSchemaData>({
     resolver: zodResolver(taskFormSchema),
@@ -48,7 +47,7 @@ export default function TaskForm(props: { id?: string }) {
       } else {
         await updateTaskAction(props.id!, data);
         toast.success('Task updated successfully');
-        deleteQueryParam('id');
+        router.back();
       }
 
       form.reset();
@@ -93,7 +92,7 @@ export default function TaskForm(props: { id?: string }) {
       </div>
 
       <CardContent>
-        <form id="todo-form" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id={props.id ?? 'todo-form'} onSubmit={form.handleSubmit(onSubmit)}>
           <FieldGroup>
             <Controller
               name="name"
@@ -127,7 +126,7 @@ export default function TaskForm(props: { id?: string }) {
           <Button
             disabled={form.formState.isSubmitting || !form.formState.isValid}
             type="submit"
-            form="todo-form"
+            form={props.id ?? 'todo-form'}
             className="cursor-pointer bg-green-600 hover:bg-green-400"
           >
             {form.formState.isSubmitting ? 'Loading' : props.id ? 'Update' : 'Add'}

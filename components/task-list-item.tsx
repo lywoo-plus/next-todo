@@ -99,7 +99,7 @@ export function TaskListItem(props: Pick<Task, 'id' | 'name' | 'done'>) {
               </Button>
             )}
 
-            <Link href={`task/${props.id}`}>
+            <Link href={`/${props.id}`}>
               <Button size="icon-sm" variant="ghost" className="bg-blue-500 rounded-full">
                 <EyeIcon className="size-4" />
               </Button>
