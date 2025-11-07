@@ -5,8 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Item, ItemActions, ItemContent, ItemTitle } from '@/components/ui/item';
 import { Task } from '@prisma/client';
 import { useRequest } from 'ahooks';
-import { CheckCircleIcon, EyeIcon, PencilIcon, UndoIcon, XIcon } from 'lucide-react';
-import Link from 'next/link';
+import { CheckCircleIcon, PencilIcon, UndoIcon, XIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { Spinner } from './ui/spinner';
@@ -46,28 +45,26 @@ export function TaskListItem(props: Pick<Task, 'id' | 'name' | 'done'>) {
         ) : (
           <ItemActions>
             {!props.done && (
-              <>
-                <Button
-                  size="icon-sm"
-                  variant="ghost"
-                  className="bg-red-500 rounded-full"
-                  onClick={() => deleteTask({ id: props.id })}
-                >
-                  <XIcon className="size-4" />
-                </Button>
-
-                <Button
-                  size="icon-sm"
-                  variant="ghost"
-                  className="bg-yellow-500 rounded-full"
-                  onClick={() => {
-                    router.push(`?id=${props.id}`, { scroll: false });
-                  }}
-                >
-                  <PencilIcon className="size-4" />
-                </Button>
-              </>
+              <Button
+                size="icon-sm"
+                variant="ghost"
+                className="bg-red-500 rounded-full"
+                onClick={() => deleteTask({ id: props.id })}
+              >
+                <XIcon className="size-4" />
+              </Button>
             )}
+
+            <Button
+              size="icon-sm"
+              variant="ghost"
+              className="bg-yellow-500 rounded-full"
+              onClick={() => {
+                router.push(`/${props.id}`);
+              }}
+            >
+              <PencilIcon className="size-4" />
+            </Button>
 
             {props.done ? (
               <Button
@@ -98,12 +95,6 @@ export function TaskListItem(props: Pick<Task, 'id' | 'name' | 'done'>) {
                 <CheckCircleIcon />
               </Button>
             )}
-
-            <Link href={`/${props.id}`}>
-              <Button size="icon-sm" variant="ghost" className="bg-blue-500 rounded-full">
-                <EyeIcon className="size-4" />
-              </Button>
-            </Link>
           </ItemActions>
         )}
       </Item>

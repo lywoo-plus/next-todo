@@ -1,23 +1,9 @@
 'use server';
 
 import { TaskFormSchemaData } from '@/components/task-form';
-import { auth } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
-import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
-
-async function checkSession() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session?.session) {
-    redirect('/sign-in');
-  }
-
-  return session;
-}
+import { checkSession } from './auth';
 
 export async function createTaskAction(data: TaskFormSchemaData) {
   const session = await checkSession();

@@ -11,6 +11,18 @@ const formSchema = z.object({
   password: z.string().min(1),
 });
 
+export async function checkSession() {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session?.session) {
+    redirect('/sign-in');
+  }
+
+  return session;
+}
+
 export async function signUp(data: z.infer<typeof formSchema>) {
   return auth.api.signUpEmail({
     body: data,
