@@ -41,7 +41,7 @@ export async function listTasksAction(payload?: { name?: string; done?: boolean 
   return prisma.task.findMany({
     where: {
       userId: session.user.id,
-      name: payload?.name,
+      name: { contains: payload?.name ?? undefined, mode: 'insensitive' },
       done: payload?.done ?? false,
     },
     orderBy: {

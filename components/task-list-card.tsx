@@ -1,42 +1,47 @@
-import { countTotalTasksAction } from '@/action/task';
-import { Task } from '@prisma/client';
+import { countTotalTasksAction, listTasksAction } from '@/action/task';
 import { Suspense } from 'react';
 import { TaskListItem } from './task-list-item';
 import TaskLoading from './task-loading';
+import SearchTaskInput from './task-search-input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
-import { Input } from './ui/input';
 
 type Props = {
   title: string;
   description: string;
   varaint: 'todo' | 'completed';
-  action: () => Promise<Task[]>;
+  searchKey: string;
+  searchValue?: string;
 };
 
 export default function TaskListCard(props: Props) {
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">{props.title}</CardTitle>
-          <CardDescription>{props.description}</CardDescription>
-        </CardHeader>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-2xl">{props.title}</CardTitle>
+        <CardDescription>{props.description}</CardDescription>
+      </CardHeader>
 
-        <CardContent className="space-y-4 h-full">
-          <Input placeholder="Search..." />
+      <CardContent className="space-y-4 h-full">
+        <SearchTaskInput searchKey={props.searchKey} searchValue={props.searchValue} />
 
-          <Suspense fallback={<TaskLoading />}>
-            <TodoTasks {...props} />
-          </Suspense>
-        </CardContent>
-      </Card>
-    </>
+        <Suspense fallback={<TaskLoading />}>
+          <TaskList
+            key={`${props.varaint}-${props.searchValue}`}
+            varaint={props.varaint}
+            searchValue={props.searchValue}
+          />
+        </Suspense>
+      </CardContent>
+    </Card>
   );
 }
 
-async function TodoTasks(props: Pick<Props, 'varaint' | 'action'>) {
+async function TaskList(props: Pick<Props, 'varaint' | 'searchValue'>) {
   const [tasks, todoTasksCount] = await Promise.all([
-    await props.action(),
+    await listTasksAction({
+      name: props.searchValue,
+      done: props.varaint === 'completed',
+    }),
     await countTotalTasksAction({ done: false }),
   ]);
 

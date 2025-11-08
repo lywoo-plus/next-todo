@@ -18,7 +18,7 @@ export function TaskListItem(props: Pick<Task, 'id' | 'name' | 'done'>) {
     {
       manual: true,
       onSuccess: () => {
-        toast.success(`Task ${props.done ? 'undid' : 'completed'} successfully`);
+        toast.success(`Task was ${props.done ? 'undone' : 'completed'} successfully`);
       },
     }
   );
