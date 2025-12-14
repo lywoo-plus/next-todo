@@ -1,11 +1,18 @@
-import ShoppingCartWithReducer from '@/components/ShoppingCartWithReducer';
+'use client';
+
+import dynamic from 'next/dynamic';
+
+const CounterWithReducer = dynamic(() => import('@/components/CounterWithReducer'), {
+  ssr: false,
+});
 
 export default function Page() {
   return (
-    <div>
+    <div suppressHydrationWarning>
       {/* <SignInForm /> */}
 
-      <ShoppingCartWithReducer />
+      {/* <ShoppingCartWithReducer /> */}
+      <CounterWithReducer />
     </div>
   );
 }

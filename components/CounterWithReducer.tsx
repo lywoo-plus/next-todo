@@ -18,8 +18,17 @@ const counterReducer = (state: number, action: 'increase' | 'decrease' | 'reset'
   }
 };
 
+const initState = (initialState: number) => {
+  if (typeof window !== 'undefined') {
+    const count = localStorage.getItem('count') ?? initialState;
+    return Number(count);
+  }
+
+  return initialState;
+};
+
 export default function CounterWithReducer() {
-  const [state, dispatch] = useReducer(counterReducer, initialState);
+  const [state, dispatch] = useReducer(counterReducer, initialState, initState);
 
   return (
     <div>
