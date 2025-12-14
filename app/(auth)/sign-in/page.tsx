@@ -1,9 +1,11 @@
-import SignInForm from '@/components/sign-in-form';
+import ShoppingCartWithReducer from '@/components/ShoppingCartWithReducer';
 
 export default function Page() {
   return (
     <div>
-      <SignInForm />
+      {/* <SignInForm /> */}
+
+      <ShoppingCartWithReducer />
     </div>
   );
 }
