@@ -4,6 +4,9 @@ import { cn } from '@/lib/utils';
 import { LogOutIcon } from 'lucide-react';
 import { headers } from 'next/headers';
 import Link from 'next/link';
+import { CounterProvider } from '../context/CounterContext';
+import Counter from './Counter';
+import CounterDisplay from './CounterDisplay';
 import { Button } from './ui/button';
 
 export default async function NavBar() {
@@ -16,6 +19,11 @@ export default async function NavBar() {
       <h1 className="text-4xl font-semibold">
         {session?.user ? <Link href={'/'}>Todo List</Link> : 'Todo List'}
       </h1>
+
+      <CounterProvider>
+        <CounterDisplay />
+        <Counter />
+      </CounterProvider>
 
       {session?.user && (
         <section className="flex items-center gap-4">
