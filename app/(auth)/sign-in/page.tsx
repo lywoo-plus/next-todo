@@ -1,5 +1,6 @@
 'use client';
 
+import StopWatch from '@/components/StopWatch';
 import dynamic from 'next/dynamic';
 
 const CounterWithReducer = dynamic(() => import('@/components/CounterWithReducer'), {
@@ -13,6 +14,8 @@ export default function Page() {
 
       {/* <ShoppingCartWithReducer /> */}
       <CounterWithReducer />
+
+      <StopWatch />
     </div>
   );
 }
