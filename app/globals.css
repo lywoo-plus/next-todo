@@ -124,3 +124,17 @@
     @apply cursor-pointer;
   }
 }
+
+/* test page */
+.social-media {
+  @apply relative flex justify-center w-max cursor-pointer;
+}
+
+.social-media::after {
+  @apply content-[attr(data-name)] text-[var(--color)] border border-[var(--color)];
+  @apply transition-all text-xs ease-in -bottom-9 duration-150 block absolute  opacity-0 py-1 px-2 rounded-md;
+}
+
+.social-media:hover::after {
+  @apply opacity-100 scale-[1.25];
+}
