@@ -1,4 +1,5 @@
 import Nav from '@/components/nav-bar';
+import { PageTransition } from '@/components/PageTransition';
 import { Toaster } from '@/components/ui/sonner';
 import { CircleCheck, CircleX } from 'lucide-react';
 import type { Metadata } from 'next';
@@ -29,7 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Nav />
-        {children}
+        <PageTransition>{children}</PageTransition>
         <Toaster
           icons={{
             success: <CircleCheck className="text-green-500" />,

@@ -20,6 +20,10 @@ export default async function NavBar() {
         {session?.user ? <Link href={'/'}>Todo List</Link> : 'Todo List'}
       </h1>
 
+      <div>
+        <Link href={'/test'}>Test page</Link>
+      </div>
+
       <CounterProvider>
         <CounterDisplay />
         <Counter />
